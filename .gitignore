@@ -1,0 +1,25 @@
+# --- Android / Gradle ---
+android/.gradle/
+android/build/
+android/**/build/
+android/local.properties
+android/.idea/
+*.iml
+.DS_Store
+*.apk
+*.aab
+*.jks
+*.keystore
+android/keystore.properties
+android/app/google-services.json
+
+# --- Backend ---
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+backend/.env
+backend/*.db
+backend/secrets/
+*firebase*adminsdk*.json

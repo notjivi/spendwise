@@ -1,0 +1,45 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: backend/requirements-dev.txt }
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q   # fully mocked: needs no Firebase or Gemini credentials
+
+  android:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: android } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+      # google-services.json is git-ignored. CI only needs a structurally valid file so the plugin
+      # runs and generates R.string.default_web_client_id (needs an oauth_client of type 3).
+      - name: Placeholder google-services.json
+        run: |
+          cat > app/google-services.json <<'JSON'
+          {
+            "project_info": { "project_number": "1", "project_id": "ci-placeholder", "storage_bucket": "ci.appspot.com" },
+            "client": [{
+              "client_info": { "mobilesdk_app_id": "1:1:android:1", "android_client_info": { "package_name": "com.spendwise.app" } },
+              "oauth_client": [{ "client_id": "1-ci.apps.googleusercontent.com", "client_type": 3 }],
+              "api_key": [{ "current_key": "ci-placeholder-key" }],
+              "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+            }],
+            "configuration_version": "1"
+          }
+          JSON
+      - run: chmod +x gradlew
+      - run: ./gradlew testDebugUnitTest assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: unit-test-reports, path: android/app/build/reports/tests }

@@ -1,0 +1,9 @@
+<resources>
+    <!-- Shown by the system splash screen until MainActivity calls installSplashScreen(). -->
+    <style name="Theme.SpendWise.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_bg</item>
+        <item name="postSplashScreenTheme">@style/Theme.SpendWise</item>
+    </style>
+    <!-- Compose draws all UI; this only sets window defaults (no action bar). -->
+    <style name="Theme.SpendWise" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SpendWise</string>
+    <string name="budget_channel_name">Budget alerts</string>
+</resources>

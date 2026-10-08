@@ -1,0 +1,3 @@
+<resources>
+    <style name="Theme.SpendWise" parent="android:Theme.Material.NoActionBar" />
+</resources>
